@@ -43,3 +43,5 @@ jobs:
       - name: Run tests
         run: |
           uv run pytest tests/
+        env:
+          GITHUB_PAT: ${{ secrets.PAT }}
