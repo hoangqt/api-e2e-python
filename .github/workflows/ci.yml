@@ -1,0 +1,45 @@
+---
+name: Python REST API Testing CI
+
+env:
+  CHECK_PATHS: src/app/ tests/
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ansible-scripts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install uv
+
+      - name: Run code formatting
+        run: |
+          uv run black --check ${CHECK_PATHS}
+
+      - name: Run linting
+        run: |
+          uv run ruff check ${CHECK_PATHS}
+
+      - name: Run tests
+        run: |
+          uv run pytest tests/
