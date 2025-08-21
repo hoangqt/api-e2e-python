@@ -1,3 +1,4 @@
+import os
 import tomllib
 from pathlib import Path
 
@@ -21,7 +22,10 @@ class Configuration:
 
     @property
     def token(self):
-        return self.config.get("github", {}).get("github-pat")
+        if "github-pat" in self.config.get("github", {}):
+            return self.config["github"]["github-pat"]
+        else:
+            return os.getenv("GITHUB_PAT").strip()
 
     @property
     def owner(self):
