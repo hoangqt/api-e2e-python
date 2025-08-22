@@ -1,14 +1,16 @@
 import os
 import tomllib
 from pathlib import Path
+from typing import Any, Dict
 
 
 class Configuration:
-    def __init__(self, config_file="tests/resources/config.toml"):
-        self.config_file = config_file
+    def __init__(self, config_file: str = "tests/resources/config.toml") -> None:
+        self.config_file: str = config_file
+        self.config: Dict[str, Any] = {}
         self._load_config()
 
-    def _load_config(self):
+    def _load_config(self) -> None:
         config_path = Path(self.config_file)
         if not config_path.exists():
             raise FileNotFoundError(
@@ -21,12 +23,12 @@ class Configuration:
             raise ValueError(f"Error decoding TOML file: {e}")
 
     @property
-    def token(self):
+    def token(self) -> str:
         if "github-pat" in self.config.get("github", {}):
             return self.config["github"]["github-pat"]
         else:
             return os.getenv("GITHUB_PAT").strip()
 
     @property
-    def owner(self):
+    def owner(self) -> str:
         return self.config.get("github", {}).get("owner")

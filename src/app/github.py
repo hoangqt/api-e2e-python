@@ -1,21 +1,22 @@
 import requests
+from typing import Optional, Dict, Any
 
 
 class GitHub:
-    def __init__(self, token, owner):
-        self._token = token
-        self._owner = owner
-        self.base_url = "https://api.github.com"
+    def __init__(self, token: str, owner: str) -> None:
+        self._token: str = token
+        self._owner: str = owner
+        self.base_url: str = "https://api.github.com"
 
     @property
-    def token(self):
+    def token(self) -> str:
         return self._token
 
     @property
-    def owner(self):
+    def owner(self) -> str:
         return self._owner
 
-    def get_repository(self, repo):
+    def get_repository(self, repo: str) -> Optional[requests.Response]:
         url = f"{self.base_url}/repos/{self.owner}/{repo}"
         headers = {
             "Authorization": f"Bearer {self.token}",
@@ -28,7 +29,9 @@ class GitHub:
         except requests.RequestException:
             return None
 
-    def create_issue(self, repo, body):
+    def create_issue(
+        self, repo: str, body: Dict[str, Any]
+    ) -> Optional[requests.Response]:
         url = f"{self.base_url}/repos/{self.owner}/{repo}/issues"
         headers = {
             "Authorization": f"Bearer {self.token}",
@@ -44,7 +47,7 @@ class GitHub:
         except requests.RequestException:
             return None
 
-    def get_issues(self, repo):
+    def get_issues(self, repo: str) -> Optional[requests.Response]:
         url = f"{self.base_url}/repos/{self.owner}/{repo}/issues"
         headers = {
             "Authorization": f"Bearer {self.token}",
@@ -58,7 +61,9 @@ class GitHub:
         except requests.RequestException:
             return None
 
-    def update_issue(self, repo, body, issue_number):
+    def update_issue(
+        self, repo: str, body: Dict[str, Any], issue_number: int
+    ) -> Optional[requests.Response]:
         url = f"{self.base_url}/repos/{self.owner}/{repo}/issues/{issue_number}"
         headers = {
             "Authorization": f"Bearer {self.token}",
@@ -74,7 +79,7 @@ class GitHub:
         except requests.RequestException:
             return None
 
-    def get_commits(self, repo):
+    def get_commits(self, repo: str) -> Optional[requests.Response]:
         url = f"{self.base_url}/repos/{self.owner}/{repo}/commits"
         headers = {
             "Authorization": f"Bearer {self.token}",
