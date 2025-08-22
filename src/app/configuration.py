@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 
 class Configuration:
-    def __init__(self, config_file="tests/resources/config.toml") -> None:
+    def __init__(self, config_file: str = "tests/resources/config.toml") -> None:
         self.config_file: str = config_file
         self.config: Dict[str, Any] = {}
         self._load_config()

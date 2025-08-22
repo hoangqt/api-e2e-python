@@ -3,7 +3,7 @@ from typing import Optional, Dict, Any
 
 
 class GitHub:
-    def __init__(self, token, owner) -> None:
+    def __init__(self, token: str, owner: str) -> None:
         self._token: str = token
         self._owner: str = owner
         self.base_url: str = "https://api.github.com"
