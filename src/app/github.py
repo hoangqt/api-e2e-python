@@ -29,7 +29,9 @@ class GitHub:
         except requests.RequestException:
             return None
 
-    def create_issue(self, repo: str, body: Dict[str, Any]) -> Optional[requests.Response]:
+    def create_issue(
+        self, repo: str, body: Dict[str, Any]
+    ) -> Optional[requests.Response]:
         url = f"{self.base_url}/repos/{self.owner}/{repo}/issues"
         headers = {
             "Authorization": f"Bearer {self.token}",
@@ -59,7 +61,9 @@ class GitHub:
         except requests.RequestException:
             return None
 
-    def update_issue(self, repo: str, body: Dict[str, Any], issue_number: int) -> Optional[requests.Response]:
+    def update_issue(
+        self, repo: str, body: Dict[str, Any], issue_number: int
+    ) -> Optional[requests.Response]:
         url = f"{self.base_url}/repos/{self.owner}/{repo}/issues/{issue_number}"
         headers = {
             "Authorization": f"Bearer {self.token}",
