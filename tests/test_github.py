@@ -15,7 +15,7 @@ class TestGitHubAPI:
 
     @classmethod
     def teardown_class(cls):
-        pass
+        TestGitHubAPI._mark_issues_as_not_planned(cls.github, cls.repo)
 
     def test_get_repository(self):
         r = self.github.get_repository(self.repo)
@@ -47,6 +47,7 @@ class TestGitHubAPI:
                     TestGitHubAPI.issueNumber = issue["number"]
                     break
 
+        # If not found, poll until timeout
         timeout_ms = 15_000  # 15 seconds
         poll_interval_ms = 500  # 0.5 seconds
         deadline = time.time() * 1000 + timeout_ms
@@ -84,3 +85,28 @@ class TestGitHubAPI:
         assert r.status_code == 200
         commits_list = r.json()
         assert len(commits_list) > 0, "Expected at least one commit"
+
+    @staticmethod
+    def _mark_issues_as_not_planned(github, repo):
+        """
+        Mark all issues in the repo as 'not_planned' and closed
+        """
+        r = github.get_issues(repo)
+        while r is not None:
+            issues_list = r.json()
+            if issues_list:
+                for issue in issues_list:
+                    issue_number = issue["number"]
+                    body = {
+                        "state": "closed",
+                        "state_reason": "not_planned",
+                    }
+                    r_update = github.update_issue(repo, body, issue_number)
+                    assert (
+                        r_update is not None
+                    ), f"Error updating GitHub issue #{issue_number}"
+                    assert r_update.status_code == 200
+            if "next" in r.links:
+                r = github.get_issues(repo, r.links["next"]["url"])
+            else:
+                r = None
