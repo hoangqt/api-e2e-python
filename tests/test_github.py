@@ -92,15 +92,21 @@ class TestGitHubAPI:
         Mark all issues in the repo as 'not_planned' and closed
         """
         r = github.get_issues(repo)
-        assert r is not None, f"Error fetching {repo} GitHub issues"
-        issues_list = r.json()
-        if issues_list:
-            for issue in issues_list:
-                issue_number = issue["number"]
-                body = {
-                    "state": "closed",
-                    "state_reason": "not_planned",
-                }
-                r = github.update_issue(repo, body, issue_number)
-                assert r is not None, f"Error updating GitHub issue #{issue_number}"
-                assert r.status_code == 200
+        while r is not None:
+            issues_list = r.json()
+            if issues_list:
+                for issue in issues_list:
+                    issue_number = issue["number"]
+                    body = {
+                        "state": "closed",
+                        "state_reason": "not_planned",
+                    }
+                    r_update = github.update_issue(repo, body, issue_number)
+                    assert (
+                        r_update is not None
+                    ), f"Error updating GitHub issue #{issue_number}"
+                    assert r_update.status_code == 200
+            if "next" in r.links:
+                r = github.get_issues(repo, r.links["next"]["url"])
+            else:
+                r = None
