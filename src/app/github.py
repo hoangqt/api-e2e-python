@@ -47,7 +47,9 @@ class GitHub:
         except requests.RequestException:
             return None
 
-    def get_issues(self, repo: str, url: Optional[str] = None) -> Optional[requests.Response]:
+    def get_issues(
+        self, repo: str, url: Optional[str] = None
+    ) -> Optional[requests.Response]:
         if url is None:
             url = f"{self.base_url}/repos/{self.owner}/{repo}/issues"
         headers = {
