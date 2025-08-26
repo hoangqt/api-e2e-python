@@ -5,7 +5,7 @@
 ## Summary
 
 A simple Astral `uv` project for testing a subset GitHub API using REST
-requests. It is implemented in Python with `requests` library.
+A simple project, based on Astral's uv, for testing a subset of the GitHub API using REST requests.
 
 ### Local setup
 
