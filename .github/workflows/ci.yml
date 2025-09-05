@@ -34,11 +34,11 @@ jobs:
 
       - name: Run code formatting
         run: |
-          uv run black --check ${CHECK_PATHS}
+          uv run black --check ${{ env.CHECK_PATHS }}
 
       - name: Run linting
         run: |
-          uv run ruff check ${CHECK_PATHS}
+          uv run ruff check ${{ env.CHECK_PATHS }}
 
       - name: Run tests
         run: |
