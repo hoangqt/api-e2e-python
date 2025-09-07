@@ -89,7 +89,9 @@ class GitHub:
             "Accept": "application/vnd.github+json",
         }
         try:
-            response = requests.get(url, headers=headers)
+            # Example of a timeout configuration workaround to missing request
+            # cancellation feature
+            response = requests.get(url, headers=headers, timeout=5)
             response.raise_for_status()
             return response
         except requests.RequestException:
