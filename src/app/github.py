@@ -1,10 +1,6 @@
 import requests
 from typing import Optional, Dict, Any
-from tenacity import (
-    retry,
-    stop_after_attempt,
-    wait_random_exponential
-)
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 
 class GitHub:
