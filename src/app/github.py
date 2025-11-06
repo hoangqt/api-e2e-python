@@ -1,5 +1,10 @@
 import requests
 from typing import Optional, Dict, Any
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_random_exponential
+)
 
 
 class GitHub:
@@ -64,6 +69,9 @@ class GitHub:
         except requests.RequestException:
             return None
 
+    # Retry on failure with exponential backoff and jitter to avoid rate limiting,
+    # transient network issues or potential collisions
+    @retry(wait=wait_random_exponential(min=1, max=10), stop=stop_after_attempt(5))
     def update_issue(
         self, repo: str, body: Dict[str, Any], issue_number: int
     ) -> Optional[requests.Response]:
