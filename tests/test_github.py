@@ -6,16 +6,17 @@ from src.app.github import GitHub
 
 
 class TestGitHubAPI:
-    @classmethod
-    def setup_class(cls):
-        cls.config = Configuration()
-        cls.github = GitHub(cls.config.token, cls.config.owner)
-        cls.repo = "sandbox"
-        TestGitHubAPI.issueNumber = None
+    issueNumber = None
 
-    @classmethod
-    def teardown_class(cls):
-        TestGitHubAPI._mark_issues_as_not_planned(cls.github, cls.repo)
+    @pytest.fixture(autouse=True)
+    def github_setup(self):
+        config = Configuration()
+        self.github = GitHub(config.token, config.owner)
+        self.repo = "sandbox"
+
+        yield
+
+        TestGitHubAPI._mark_issues_as_not_planned(self.github, self.repo)
 
     def test_get_repository(self):
         r = self.github.get_repository(self.repo)
