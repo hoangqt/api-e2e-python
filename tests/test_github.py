@@ -51,7 +51,10 @@ class TestGitHubAPI:
         if issues_list:
             for issue in issues_list:
                 # Get the issue number of the first issue with the generated title
-                if TestGitHubAPI.issue_title and TestGitHubAPI.issue_title in issue.get("title", ""):
+                if (
+                    TestGitHubAPI.issue_title
+                    and TestGitHubAPI.issue_title in issue.get("title", "")
+                ):
                     TestGitHubAPI.issueNumber = issue["number"]
                     break
 
@@ -66,7 +69,10 @@ class TestGitHubAPI:
             if r.status_code == 200:
                 issues_list = r.json()
                 for issue in issues_list:
-                    if TestGitHubAPI.issue_title and TestGitHubAPI.issue_title in issue.get("title", ""):
+                    if (
+                        TestGitHubAPI.issue_title
+                        and TestGitHubAPI.issue_title in issue.get("title", "")
+                    ):
                         TestGitHubAPI.issueNumber = issue["number"]
                         found = True
                         break
