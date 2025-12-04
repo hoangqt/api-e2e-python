@@ -1,5 +1,8 @@
 import pytest
 import time
+import warnings
+from hypothesis.strategies import text
+from hypothesis.errors import NonInteractiveExampleWarning
 
 from src.app.configuration import Configuration
 from src.app.github import GitHub
@@ -12,6 +15,11 @@ class TestGitHubAPI:
         cls.github = GitHub(cls.config.token, cls.config.owner)
         cls.repo = "sandbox"
         TestGitHubAPI.issueNumber = None
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", NonInteractiveExampleWarning)
+            # Generate random title and body using Hypothesis strategies
+            TestGitHubAPI.issue_title = text(min_size=1, max_size=100).example()
+            TestGitHubAPI.issue_body = text(min_size=1, max_size=500).example()
 
     @classmethod
     def teardown_class(cls):
@@ -25,8 +33,8 @@ class TestGitHubAPI:
     @pytest.mark.order(1)
     def test_create_issue(self):
         body = {
-            "title": "Found a bug",
-            "body": "This is a test issue created by Python automation",
+            "title": TestGitHubAPI.issue_title,
+            "body": TestGitHubAPI.issue_body,
             "assignees": ["hoangqt"],
             "labels": ["bug"],
         }
@@ -42,8 +50,8 @@ class TestGitHubAPI:
         issues_list = r.json()
         if issues_list:
             for issue in issues_list:
-                # Get the issue number of the first issue with title containing "Found a bug"
-                if "Found a bug" in issue.get("title", ""):
+                # Get the issue number of the first issue with the generated title
+                if TestGitHubAPI.issue_title and TestGitHubAPI.issue_title in issue.get("title", ""):
                     TestGitHubAPI.issueNumber = issue["number"]
                     break
 
@@ -58,7 +66,7 @@ class TestGitHubAPI:
             if r.status_code == 200:
                 issues_list = r.json()
                 for issue in issues_list:
-                    if "Found a bug" in issue.get("title", ""):
+                    if TestGitHubAPI.issue_title and TestGitHubAPI.issue_title in issue.get("title", ""):
                         TestGitHubAPI.issueNumber = issue["number"]
                         found = True
                         break
@@ -70,8 +78,8 @@ class TestGitHubAPI:
     @pytest.mark.order(3)
     def test_update_issue(self):
         body = {
-            "title": "Found a bug",
-            "body": "This is a test issue created by Python automation",
+            "title": TestGitHubAPI.issue_title,
+            "body": TestGitHubAPI.issue_body,
             "assignees": ["hoangqt"],
             "labels": ["bug", "invalid"],
         }
