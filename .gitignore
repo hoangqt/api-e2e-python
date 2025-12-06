@@ -16,3 +16,5 @@ gha-creds-*.json
 
 # Virtual environments
 .venv
+
+config.toml
