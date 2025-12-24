@@ -1,6 +1,9 @@
+import logging
 import requests
 from typing import Optional, Dict, Any
 from tenacity import retry, stop_after_attempt, wait_random_exponential
+
+logger = logging.getLogger(__name__)
 
 
 class GitHub:
@@ -19,6 +22,7 @@ class GitHub:
 
     def get_repository(self, repo: str) -> Optional[requests.Response]:
         url = f"{self.base_url}/repos/{self.owner}/{repo}"
+        logger.debug(f"Fetching repository from {url}")
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Accept": "application/vnd.github.v3+json",
@@ -53,6 +57,7 @@ class GitHub:
     ) -> Optional[requests.Response]:
         if url is None:
             url = f"{self.base_url}/repos/{self.owner}/{repo}/issues"
+            logger.debug(f"Fetching issues from {url}")
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Accept": "application/vnd.github+json",
@@ -88,6 +93,7 @@ class GitHub:
 
     def get_commits(self, repo: str) -> Optional[requests.Response]:
         url = f"{self.base_url}/repos/{self.owner}/{repo}/commits"
+        logger.debug(f"Fetching commits from {url}")
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Accept": "application/vnd.github+json",

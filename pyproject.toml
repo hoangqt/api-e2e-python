@@ -14,3 +14,9 @@ dependencies = [
     "ruff>=0.12.9",
     "tenacity>=9.1.2",
 ]
+
+[tool.pytest.ini_options]
+log_cli = false
+log_cli_level = "DEBUG"
+log_cli_format = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
